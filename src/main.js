@@ -15,16 +15,6 @@ try
             throw err;
         }
 
-        const db = cluster.db("testing");
-        const collection = db.collection("test_set");
-
-        // PLACEHOLDER to see if it runs
-        app.get("/", async (req, res) => {
-            let found = await collection.findOne();
-            console.log(found);
-            res.send(found);
-        });
-
         app.listen(port, () => {
             console.log(`App listening on port ${port}`);
         });
