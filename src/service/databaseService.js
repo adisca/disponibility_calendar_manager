@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const uri = "mongodb://127.0.0.1:27017/dcm";
 
@@ -7,8 +7,9 @@ module.exports.connect = function () {
         mongoose.connect(uri, (err) => {
             if (err) {
                 // PLACEHOLDER_LOG; error
-                console.log(err);
-                reject();
+                console.log("Database could not be started");
+                reject(err);
+                return;
             }
 
             // PLACEHOLDER_LOG; success

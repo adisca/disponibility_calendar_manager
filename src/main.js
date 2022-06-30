@@ -12,17 +12,18 @@ app.use(express.json());
 app.use(helmet());
 app.use(cors());
 
-databaseService.connect()
-    .then(() => {
+async function runServer() {
+    try {
+        await databaseService.connect();
         app.listen(port, () => {
             // PLACEHOLDER_LOG; information
             console.log(`App listening on port ${port}`);
         });
-    })
-    .catch((err) => {
-        if (err) {
-            // PLACEHOLDER_LOG; error
-            console.log(err);
-        }
-        // else it was managed already
-    })
+    }
+    catch (err) {
+        // PLACEHOLDER_LOG; error
+        console.log(err);
+    }
+}
+
+runServer();
