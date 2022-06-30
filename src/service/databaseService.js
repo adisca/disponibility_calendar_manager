@@ -1,14 +1,19 @@
 const mongoose = require("mongoose")
 
-const dbConnectionSuccessMsg = "Database connected successfully";
+const uri = "mongodb://127.0.0.1:27017/dcm";
 
-module.exports.connect = function (uri) {
+module.exports.connect = function () {
     return new Promise((resolve, reject) => {
         mongoose.connect(uri, (err) => {
-            if (err)
-                reject(err);
+            if (err) {
+                // PLACEHOLDER_LOG; error
+                console.log(err);
+                reject();
+            }
 
-            resolve(dbConnectionSuccessMsg);
+            // PLACEHOLDER_LOG; success
+            console.log("Database connected successfully");
+            resolve();
         });
     });
 }
