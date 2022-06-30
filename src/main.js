@@ -15,14 +15,19 @@ app.use(cors());
 async function runServer() {
     try {
         await databaseService.connect();
+
         app.listen(port, () => {
-            // PLACEHOLDER_LOG; information
+            // PLACEHOLDER_LOG; info
             console.log(`App listening on port ${port}`);
+        }).on("error", (err) => {
+            // PLACEHOLDER_LOG; error
+            console.log("Listen error: " + err);
+            databaseService.disconnect();
         });
     }
     catch (err) {
         // PLACEHOLDER_LOG; error
-        console.log(err);
+        console.log("Error in main: " + err);
     }
 }
 
