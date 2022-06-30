@@ -4,13 +4,13 @@ const { MongoClient } = require("mongodb");
 
 const app = express();
 const port = 3000;
-const url = "mongodb+srv://root:g0WL8QssCucGhsVj@db.q5ypejc.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb://127.0.0.1:27017/?serverSelectionTimeoutMS=5000&connectTimeoutMS=10000";
 
 app.use(express.json());
 
 try
 {
-    MongoClient.connect(url, function(err, cluster) {
+    MongoClient.connect(uri, function(err, cluster) {
         if(err) {
             throw err;
         }
