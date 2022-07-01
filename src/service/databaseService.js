@@ -27,4 +27,4 @@ mongoose.connection.on("error", (err) => {
 
 mongoose.connection.on("disconnected", () => {
     LOG.info(__filename, "Database disconnected");
-})
+});
