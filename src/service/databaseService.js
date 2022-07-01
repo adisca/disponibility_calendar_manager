@@ -6,14 +6,12 @@ module.exports.connect = function () {
     return new Promise((resolve, reject) => {
         mongoose.connect(uri, (err) => {
             if (err) {
-                // PLACEHOLDER_LOG; error
-                console.log("Database could not be started");
+                LOG.error(__filename, err, "Database could not be started");
                 reject(err);
                 return;
             }
 
-            // PLACEHOLDER_LOG; success
-            console.log("Database connected successfully");
+            LOG.info(__filename, "Database connected successfully");
             resolve();
         });
     });
@@ -24,11 +22,9 @@ module.exports.disconnect = function () {
 }
 
 mongoose.connection.on("error", (err) => {
-    // PLACEHOLDER_LOG; error
-    console.log("Database error: " + err);
+    LOG.error(__filename, err, "Database error");
 });
 
 mongoose.connection.on("disconnected", () => {
-    // PLACEHOLDER_LOG; info
-    console.log("Database disconnected");
+    LOG.info(__filename, "Database disconnected");
 })
