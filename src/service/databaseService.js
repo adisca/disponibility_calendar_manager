@@ -20,20 +20,7 @@ module.exports.connect = function () {
 }
 
 module.exports.disconnect = function () {
-    return new Promise((resolve, reject) => {
-        mongoose.disconnect((err) => {
-            if (err) {
-                // PLACEHOLDER_LOG; error
-                console.log("Database disconnection error");
-                reject(err);
-                return;
-            }
-
-            // PLACEHOLDER_LOG; success
-            console.log("Database disconnected successfully by call");
-            resolve();
-        });
-    });
+    mongoose.disconnect();
 }
 
 mongoose.connection.on("error", (err) => {
