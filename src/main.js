@@ -1,9 +1,10 @@
 "use strict";
 
+global.LOG = require("./service/logger");
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
-const databaseService = require("./service/databaseService.js")
+const databaseService = require("./service/databaseService")
 
 const app = express();
 const port = 3000;
@@ -17,17 +18,14 @@ async function runServer() {
         await databaseService.connect();
 
         app.listen(port, () => {
-            // PLACEHOLDER_LOG; info
-            console.log(`App listening on port ${port}`);
+            LOG.info(__filename, `App listening on port ${port}`);
         }).on("error", (err) => {
-            // PLACEHOLDER_LOG; error
-            console.log("Listen error: " + err);
+            LOG.error(__filename, err, "Listen error");
             databaseService.disconnect();
         });
     }
     catch (err) {
-        // PLACEHOLDER_LOG; error
-        console.log("Error in main: " + err);
+        LOG.error(__filename, err, "Error in main");
     }
 }
 
