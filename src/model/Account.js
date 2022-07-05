@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const roleEnum = require("./enums/Role");
 
+const MAX_LENGTH_NAME = 30;
+const MAX_LENGTH_ADDRESS = 50;
+
 const schema = new mongoose.Schema({
     email: {
         type: String,
@@ -22,11 +25,11 @@ const schema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Name is required"],
-        maxLength: [30, "Name too long"]
+        maxLength: [MAX_LENGTH_NAME, `Name too long, max characters: ${MAX_LENGTH_NAME}`]
     },
     address: {
         type: String,
-        maxLength: [50, "Address too long"]
+        maxLength: [MAX_LENGTH_ADDRESS, `Address too long, max characters: ${MAX_LENGTH_ADDRESS}`]
     },
     phoneNb: {
         type: String,

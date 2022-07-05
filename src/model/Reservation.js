@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const schema = new mongoose.Schema({
     date: {
         type: String,
+        required: [true, "Date is required"],
         validate: {
             validator: function (v) {
                 const d = new Date(v);
@@ -12,7 +13,11 @@ const schema = new mongoose.Schema({
                 Note: only the format "YYYY-MM-DD" is accepted`
         }
     },
-    user: mongoose.ObjectId,
+    accountId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Account",
+        required: [true, "Account ID is required"]
+    },
     // We will use set operations to ensure uniqueness
     hour: [{
         type: Number,
