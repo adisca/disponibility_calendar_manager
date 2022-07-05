@@ -16,7 +16,7 @@ const schema = new mongoose.Schema({
     accountId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Account",
-        required: [true, "Account ID is required"]
+        required: [true, "AccountId is required"]
     },
     // We will use set operations to ensure uniqueness
     hour: [{
