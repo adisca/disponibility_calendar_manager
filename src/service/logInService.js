@@ -12,11 +12,7 @@ function validatePassword(pass) {
 
 module.exports.registerUser = function (userJson) {
     return new Promise(async (resolve, reject) => {
-        if (userJson["role"] !== roleEnum.enum.USER_ROLE) {
-            LOG.error(__filename, new Error("Bad role"), `The user must have ${roleEnum.enum.USER_ROLE} as role`);
-            reject({ err: new Error("Bad role"), msg: `The user must have ${roleEnum.enum.USER_ROLE} as role` });
-            return;
-        }
+        userJson["role"] = roleEnum.enum.USER_ROLE;
 
         if (validatePassword(userJson["password"])) {
             var hash = crypto.createHash("md5").update(userJson["password"]).digest("hex");
