@@ -1,14 +1,13 @@
 module.exports.createUser = function (user) {
     return new Promise((resolve, reject) => {
-        user.save((err) => {
-            if (err) {
-                LOG.error(__filename, err, "Failed to create user");
-                reject({ err: err, msg: "Failed to create user" });
-                return;
-            }
-
-            LOG.info(__filename, "Created user successfully");
-            resolve("Created user successfully");
-        });
+        user.save()
+            .then(() => {
+                LOG.info(__filename, "User created successfully");
+                resolve("User created successfully");
+            })
+            .catch((err) => {
+                LOG.error(__filename, err);
+                reject(err);
+            });
     });
 }

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const roleEnum = require("./enums/Role");
+const crypto = require("crypto");
 
 const MAX_LENGTH_NAME = 30;
 const MAX_LENGTH_ADDRESS = 50;
@@ -8,11 +9,13 @@ const schema = new mongoose.Schema({
     email: {
         type: String,
         unique: [true, "Email must be unique"],
-        required: [true, "Email is required"]
+        required: [true, "Email is required"],
+        set: v => v.toLowerCase()
     },
     password: {
         type: String,
-        required: [true, "Password is required"]
+        required: [true, "Password is required"],
+        set: v => crypto.createHash("md5").update(v).digest("hex")
     },
     role: {
         type: String,
