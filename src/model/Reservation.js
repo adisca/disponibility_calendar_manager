@@ -1,3 +1,33 @@
+/** 
+ * @swagger
+ * components:
+ *      schemas:
+ *          Reservation:
+ *              type: object
+ *              required:
+ *                  - date
+ *                  - accountId
+ *              properties:
+ *                  _id:
+ *                      type: integer
+ *                      description: The auto-generated id of the reservation.
+ *                  date:
+ *                      type: string
+ *                      description: The date of the reservation
+ *                  accountId:
+ *                      type: integer
+ *                      description: The id of the account of this reservation
+ *                  hour:
+ *                      type: array
+ *                      items:
+ *                          type: integer
+ *                          description: The hours reserved by this date-account pair
+ *              example:
+ *                  date: "2022-12-28"
+ *                  accountId: 1
+ *                  hour: [0, 1, 12, 13, 22, 23]
+*/
+
 const mongoose = require("mongoose");
 
 const schema = new mongoose.Schema({
