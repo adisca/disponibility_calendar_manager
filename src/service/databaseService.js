@@ -1,6 +1,13 @@
 const mongoose = require("mongoose");
 
-const uri = "mongodb://127.0.0.1:27017/dcm";
+let uri;
+if (ENV === "development") {
+    uri = "mongodb://127.0.0.1:27017/dcm";
+}
+else {
+    uri = "mongodb://127.0.0.1:27017/dcm-test";
+    LOG.info(__filename, "Using testing database");
+}
 
 module.exports.connect = function () {
     return new Promise((resolve, reject) => {
