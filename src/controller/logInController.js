@@ -16,7 +16,7 @@
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: "#/components/Account"
+ *                          $ref: "#/components/schemas/Account"
  *                          example:
  *                              email: "email@email.com"
  *                              password: "1234"
