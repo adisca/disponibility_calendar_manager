@@ -1,5 +1,6 @@
 "use strict";
 
+global.ENV = process.env.NODE_ENV || 'development';
 global.LOG = require("./service/logger");
 const express = require("express");
 const helmet = require("helmet");
@@ -9,6 +10,7 @@ const logInController = require("./controller/logInController");
 
 const app = express();
 const port = 3000;
+let server;
 
 app.use(express.json());
 app.use(helmet());
@@ -20,7 +22,7 @@ async function runServer() {
 
         logInController(app);
 
-        app.listen(port, () => {
+        server = app.listen(port, () => {
             LOG.info(__filename, `App listening on port ${port}`);
         }).on("error", (err) => {
             LOG.error(__filename, err, "Listen error");
@@ -32,4 +34,14 @@ async function runServer() {
     }
 }
 
+function closeServer() {
+    if (server) {
+        server.close();
+    }
+    databaseService.disconnect();
+}
+
 runServer();
+
+module.exports = app;
+module.exports.closeServer = closeServer;
