@@ -8,7 +8,7 @@
  *                  - date
  *                  - accountId
  *              properties:
- *                  _id:
+ *                  id:
  *                      type: integer
  *                      description: The auto-generated id of the reservation.
  *                  date:

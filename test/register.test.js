@@ -6,41 +6,55 @@ const mongoose = require("mongoose");
 
 chai.use(chaiHttp);
 
-describe("POST /login", () => {
-    // The test user
-    const user = {
-        email: "test@test.com",
+describe("POST /register", () => {
+    // All fields
+    const goodUser1 = {
+        email: "test1@test.com",
         password: "1234",
         name: "User For Testing",
         address: "None needed",
         phoneNb: "1234 123 123"
-    };
+    }
+    // Removed the optional fields
+    const goodUser2 = {
+        email: "test2@test.com",
+        password: "1234",
+        name: "User For Testing",
+    }
 
-    const goodCredentials = {
-        email: "test@test.com",
-        password: "1234"
-    };
-
-    // Empty
-    const badCredentials1 = {};
-    // No email
-    const badCredentials2 = {
-        password: "1234"
-    };
-    // No password
-    const badCredentials3 = {
-        email: "test@test.com",
-    };
-    // Inexistent email
-    const badCredentials4 = {
-        email: "wrong@email.com",
-        password: "1234"
-    };
-    // Wrong password
-    const badCredentials5 = {
-        email: "test@test.com",
-        password: "wrong"
-    };
+    // Empty User
+    const badUser1 = {}
+    // Repeated email
+    const badUser2 = {
+        email: "test1@test.com",
+        password: "1234",
+        name: "User For Testing",
+        address: "None needed",
+        phoneNb: "1234 123 123"
+    }
+    // Missing required field
+    const badUser3 = {
+        email: "testbad3@test.com",
+        password: "1234",
+        address: "None needed",
+        phoneNb: "1234 123 123"
+    }
+    // Fails phone number regex
+    const badUser4 = {
+        email: "testbad4@test.com",
+        password: "1234",
+        name: "User For Testing",
+        address: "None needed",
+        phoneNb: "1234123123"
+    }
+    // Name field too long
+    const badUser5 = {
+        email: "testbad5@test.com",
+        password: "1234",
+        name: "User For Testinggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
+        address: "None needed",
+        phoneNb: "1234 123 123"
+    }
 
     before(async function () {
         server.runServer();
@@ -62,22 +76,15 @@ describe("POST /login", () => {
         server.closeServer();
     });
 
-    it("Tests preparation", (done) => {
+    it("Test if the server exists", (done) => {
+        expect(server).to.not.be.undefined;
+        done();
+    });
+
+    it("It sould register goodUser1", (done) => {
         chai.request(server)
             .post("/register")
-            .send(user)
-            .end((err, res) => {
-                expect(err).is.null;
-
-                expect(res).to.have.status(200);
-                done();
-            });
-    })
-
-    it("It should work with the good credentials", (done) => {
-        chai.request(server)
-            .post("/login")
-            .send(goodCredentials)
+            .send(goodUser1)
             .end((err, res) => {
                 expect(err).is.null;
 
@@ -86,10 +93,23 @@ describe("POST /login", () => {
             });
     });
 
-    it("It should fali with the bad credentials 1", (done) => {
+
+    it("It sould register goodUser2", (done) => {
         chai.request(server)
-            .post("/login")
-            .send(badCredentials1)
+            .post("/register")
+            .send(goodUser2)
+            .end((err, res) => {
+                expect(err).is.null;
+
+                expect(res).to.have.status(200);
+                done();
+            });
+    });
+
+    it("It should fail to register badUser1", (done) => {
+        chai.request(server)
+            .post("/register")
+            .send(badUser1)
             .end((err, res) => {
                 expect(err).is.null;
 
@@ -98,10 +118,10 @@ describe("POST /login", () => {
             });
     });
 
-    it("It should fali with the bad credentials 2", (done) => {
+    it("It should fail to register badUser2", (done) => {
         chai.request(server)
-            .post("/login")
-            .send(badCredentials2)
+            .post("/register")
+            .send(badUser2)
             .end((err, res) => {
                 expect(err).is.null;
 
@@ -110,10 +130,10 @@ describe("POST /login", () => {
             });
     });
 
-    it("It should fali with the bad credentials 3", (done) => {
+    it("It should fail to register badUser3", (done) => {
         chai.request(server)
-            .post("/login")
-            .send(badCredentials3)
+            .post("/register")
+            .send(badUser3)
             .end((err, res) => {
                 expect(err).is.null;
 
@@ -122,10 +142,10 @@ describe("POST /login", () => {
             });
     });
 
-    it("It should fali with the bad credentials 4", (done) => {
+    it("It should fail to register badUser4", (done) => {
         chai.request(server)
-            .post("/login")
-            .send(badCredentials4)
+            .post("/register")
+            .send(badUser4)
             .end((err, res) => {
                 expect(err).is.null;
 
@@ -134,10 +154,10 @@ describe("POST /login", () => {
             });
     });
 
-    it("It should fali with the bad credentials 5", (done) => {
+    it("It should fail to register badUser5", (done) => {
         chai.request(server)
-            .post("/login")
-            .send(badCredentials5)
+            .post("/register")
+            .send(badUser5)
             .end((err, res) => {
                 expect(err).is.null;
 
@@ -145,5 +165,4 @@ describe("POST /login", () => {
                 done();
             });
     });
-
 });
