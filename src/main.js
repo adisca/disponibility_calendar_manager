@@ -10,6 +10,7 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const databaseService = require("./service/databaseService")
 const logInController = require("./controller/logInController");
+const reservationController = require("./controller/reservationController");
 
 const app = express();
 const port = 3000;
@@ -42,6 +43,8 @@ async function runServer() {
         await databaseService.connect();
 
         logInController(app);
+
+        reservationController(app);
 
         server = app.listen(port, () => {
             LOG.info(__filename, `App listening on port ${port}`);
