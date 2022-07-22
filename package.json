@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "main": "src/main.js",
   "scripts": {
-    "test": "set \"NODE_ENV=test\" && nodemon --exec mocha */**.test.js",
-    "start": "nodemon main"
+    "test": "set \"NODE_ENV=test\" && set \"TOKEN_KEY=123456\" && nodemon --exec mocha */**.test.js",
+    "start": "set \"TOKEN_KEY=123456\" && nodemon main"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const TOKEN_KEY = "123456"
+const TOKEN_KEY = process.env.TOKEN_KEY || "";
 
 module.exports.sign = function (account) {
     if (!account || !account.id || !account.role) {

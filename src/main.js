@@ -1,6 +1,6 @@
 "use strict";
 
-global.ENV = process.env.NODE_ENV || 'development';
+global.ENV = process.env.NODE_ENV || "development";
 global.LOG = require("./service/logger");
 
 const express = require("express");
