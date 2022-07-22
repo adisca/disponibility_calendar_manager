@@ -1,3 +1,6 @@
+const encryptor = require("../service/security/encryptor");
+const Account = require("../model/Account");
+
 module.exports.createUser = function (user) {
     return new Promise((resolve, reject) => {
         user.save()
@@ -9,5 +12,33 @@ module.exports.createUser = function (user) {
                 LOG.error(__filename, err);
                 reject(err);
             });
+    });
+}
+
+module.exports.verifyAccountLogin = function (credentials) {
+    return new Promise((resolve, reject) => {
+        Account.findOne({ "email": credentials.email })
+            .then((result) => {
+                if (!result) {
+                    const err = new Error("Email not found");
+                    LOG.error(__filename, err);
+                    reject(err);
+                    return;
+                }
+                if (result.password === encryptor.hashPassword(credentials.password)) {
+                    LOG.info(__filename, "Log in successfull");
+                    resolve(result);
+                    return;
+                }
+
+                const err = new Error("Wrong password");
+                LOG.error(__filename, err);
+                reject(err);
+            })
+            .catch((err) => {
+                LOG.error(__filename, err, "Could not find the account");
+                reject(err);
+            });
+
     });
 }
