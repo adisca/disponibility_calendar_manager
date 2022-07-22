@@ -1,6 +1,6 @@
 "use strict";
 
-global.ENV = process.env.NODE_ENV || 'development';
+global.ENV = process.env.NODE_ENV || "development";
 global.LOG = require("./service/logger");
 
 const express = require("express");
@@ -39,11 +39,11 @@ app.use(helmet());
 app.use(cors());
 
 async function runServer() {
-    try {
-        await databaseService.connect();
+    if (!server) {
+        try {
+            await databaseService.connect();
 
-        logInController(app);
-
+            logInController(app);
         reservationController(app);
 
         server = app.listen(port, () => {
@@ -52,9 +52,10 @@ async function runServer() {
             LOG.error(__filename, err, "Listen error");
             databaseService.disconnect();
         });
-    }
-    catch (err) {
-        LOG.error(__filename, err, "Error in main");
+      }
+      catch (err) {
+          LOG.error(__filename, err, "Error in main");
+      }
     }
 }
 
@@ -63,9 +64,12 @@ function closeServer() {
         server.close();
     }
     databaseService.disconnect();
+    server = undefined;
 }
 
-runServer();
+if (ENV === "development")
+    runServer();
 
 module.exports = app;
 module.exports.closeServer = closeServer;
+module.exports.runServer = runServer;

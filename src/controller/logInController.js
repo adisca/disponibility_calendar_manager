@@ -42,8 +42,43 @@
  *                              example: ValidationError email Email is required
  */
 
+/**
+ * @swagger
+ * /login:
+ *      post:
+ *          summary: Tries to log in with the given credentials
+ *          tags: [Log In]
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          example:
+ *                              email: "email@email.com"
+ *                              password: "1234"
+ *          responses:
+ *              200:
+ *                  description: Log in successfull. A token and a message has been returned.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              example:
+ *                                  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOiI2MmNkNGUxZWYzYzcyMjlmY2VjNjAzNzgiLCJyb2xlIjoiVVNFUl9ST0xFIiwiaWF0IjoxNjU3NzkxNTczLCJleHAiOjE2NTc4MzQ3NzN9.eLjk1k7AM2pEGIwjCQLERzGRtXvNUO3RWGAc9awMl3g"
+ *                                  msg: "Log in successful"
+ *              400:
+ *                  description: Failed to log in. One or both of the credentials is wrong.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: string
+ *                              description: Error message
+ *                              example: Error Wrong password
+ */
+
 const logInService = require("../service/logInService");
 
 module.exports = function (app) {
     app.post("/register", logInService.registerUser);
+
+    app.post("/login", logInService.login);
 }
