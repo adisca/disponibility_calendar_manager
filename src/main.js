@@ -48,17 +48,18 @@ async function runServer() {
             routing(router);
 
             logInController(app);
+        reservationController(app);
 
-            server = app.listen(port, () => {
-                LOG.info(__filename, `App listening on port ${port}`);
-            }).on("error", (err) => {
-                LOG.error(__filename, err, "Listen error");
-                databaseService.disconnect();
-            });
-        }
-        catch (err) {
-            LOG.error(__filename, err, "Error in main");
-        }
+        server = app.listen(port, () => {
+            LOG.info(__filename, `App listening on port ${port}`);
+        }).on("error", (err) => {
+            LOG.error(__filename, err, "Listen error");
+            databaseService.disconnect();
+        });
+      }
+      catch (err) {
+          LOG.error(__filename, err, "Error in main");
+      }
     }
 }
 
