@@ -10,8 +10,10 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const databaseService = require("./service/databaseService")
 const logInController = require("./controller/logInController");
+const routing = require("./controller/routing");
 
 const app = express();
+const router = express.Router();
 const port = 3000;
 const swaggerOptions = {
     definition: {
@@ -36,11 +38,14 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs, { explorer: 
 app.use(express.json());
 app.use(helmet());
 app.use(cors());
+app.use("/", router);
 
 async function runServer() {
     if (!server) {
         try {
             await databaseService.connect();
+
+            routing(router);
 
             logInController(app);
 
