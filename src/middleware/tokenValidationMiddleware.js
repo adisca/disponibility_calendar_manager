@@ -1,7 +1,6 @@
 const accountRoles = require("../model/enums/Role");
 const auth = require("../service/security/auth");
 const errorService = require("../service/errorService");
-const { UnauthorizedError } = require("../utils/errors");
 
 module.exports.userRoleWrapper = function (req, res, next) {
     middleware(req, res, next, [accountRoles.enum.USER_ROLE, accountRoles.enum.ADMIN_ROLE]);

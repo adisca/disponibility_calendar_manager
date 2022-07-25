@@ -10,6 +10,7 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const databaseService = require("./service/databaseService")
 const logInController = require("./controller/logInController");
+const reservationController = require("./controller/reservationController");
 const routing = require("./controller/routing");
 
 const app = express();
