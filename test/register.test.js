@@ -56,14 +56,17 @@ describe("POST /register", () => {
         phoneNb: "1234 123 123"
     }
 
-    before(async function () {
-        server.runServer();
-        mongoose.connection.once("open", async () => {
-            const collections = await mongoose.connection.db.collections();
+    before(function () {
+        return new Promise((resolve, _reject) => {
+            server.runServer();
+            mongoose.connection.once("open", async () => {
+                const collections = await mongoose.connection.db.collections();
 
-            for (let collection of collections) {
-                await collection.deleteMany({});
-            }
+                for (let collection of collections) {
+                    await collection.deleteMany({});
+                }
+                resolve();
+            });
         });
     });
 

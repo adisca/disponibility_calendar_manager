@@ -61,7 +61,7 @@ const schema = new mongoose.Schema({
     }]
 });
 
-schema.index({ date: 1, user: 1 }, { unique: true });
+schema.index({ date: 1, accountId: 1 }, { unique: true });
 
 // Prehook to ensure validations is programmer unfriendly and dosen't give the mongoose errors
 // But it reduces the db operations to 1
