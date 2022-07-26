@@ -61,14 +61,13 @@ const schema = new mongoose.Schema({
     }]
 });
 
-schema.index({ date: 1, user: 1 }, { unique: true });
+schema.index({ date: 1, accountId: 1 }, { unique: true });
 
 // Prehook to ensure validations is programmer unfriendly and dosen't give the mongoose errors
 // But it reduces the db operations to 1
 // [Note to self]: NEVER EVER EVER use => syntax for callbacks if you plan to use "this"
 schema.pre("updateOne", function (next) {
     let options = this.getOptions();
-    let update = this.getUpdate();
     let filter = this.getFilter();
 
     // Should be expanded for when the validated fields are in the query (update) and not only the filter

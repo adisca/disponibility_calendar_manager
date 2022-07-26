@@ -20,6 +20,14 @@ module.exports.error400 = function (res, err, msg = null) {
     res.status(400).send(`${err}\n\t${msg ? `\n\t${msg}` : ""}`);
 }
 
+module.exports.error401 = function (res, err, msg = null) {
+    res.status(401).send(`${err}\n\t${msg ? `\n\t${msg}` : ""}`);
+}
+
+module.exports.error403 = function (res, err, msg = null) {
+    res.status(403).send(`${err}\n\t${msg ? `\n\t${msg}` : ""}`);
+}
+
 module.exports.error500 = function (res, err, msg = null) {
     res.status(500).send(`${err}\n\t${msg ? `\n\t${msg}` : ""}`);
 }

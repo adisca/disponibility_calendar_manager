@@ -42,14 +42,25 @@ describe("POST /login", () => {
         password: "wrong"
     };
 
-    before(async function () {
-        server.runServer();
-        mongoose.connection.once("open", async () => {
-            const collections = await mongoose.connection.db.collections();
+    before(function () {
+        return new Promise((resolve, reject) => {
+            server.runServer();
+            mongoose.connection.once("open", async () => {
+                const collections = await mongoose.connection.db.collections();
 
-            for (let collection of collections) {
-                await collection.deleteMany({});
-            }
+                for (let collection of collections) {
+                    await collection.deleteMany({});
+                }
+
+                chai.request(server)
+                    .post("/register")
+                    .send(user)
+                    .end((err, _res) => {
+                        if (err)
+                            reject(err)
+                        resolve()
+                    });
+            });
         });
     });
 
@@ -61,18 +72,6 @@ describe("POST /login", () => {
         }
         server.closeServer();
     });
-
-    it("Tests preparation", (done) => {
-        chai.request(server)
-            .post("/register")
-            .send(user)
-            .end((err, res) => {
-                expect(err).is.null;
-
-                expect(res).to.have.status(200);
-                done();
-            });
-    })
 
     it("It should work with the good credentials", (done) => {
         chai.request(server)
@@ -86,7 +85,7 @@ describe("POST /login", () => {
             });
     });
 
-    it("It should fali with the bad credentials 1", (done) => {
+    it("It should fail with the bad credentials 1", (done) => {
         chai.request(server)
             .post("/login")
             .send(badCredentials1)
@@ -98,7 +97,7 @@ describe("POST /login", () => {
             });
     });
 
-    it("It should fali with the bad credentials 2", (done) => {
+    it("It should fail with the bad credentials 2", (done) => {
         chai.request(server)
             .post("/login")
             .send(badCredentials2)
@@ -110,7 +109,7 @@ describe("POST /login", () => {
             });
     });
 
-    it("It should fali with the bad credentials 3", (done) => {
+    it("It should fail with the bad credentials 3", (done) => {
         chai.request(server)
             .post("/login")
             .send(badCredentials3)
@@ -122,7 +121,7 @@ describe("POST /login", () => {
             });
     });
 
-    it("It should fali with the bad credentials 4", (done) => {
+    it("It should fail with the bad credentials 4", (done) => {
         chai.request(server)
             .post("/login")
             .send(badCredentials4)
@@ -134,7 +133,7 @@ describe("POST /login", () => {
             });
     });
 
-    it("It should fali with the bad credentials 5", (done) => {
+    it("It should fail with the bad credentials 5", (done) => {
         chai.request(server)
             .post("/login")
             .send(badCredentials5)

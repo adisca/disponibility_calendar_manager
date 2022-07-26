@@ -11,8 +11,10 @@ const swaggerUi = require("swagger-ui-express");
 const databaseService = require("./service/databaseService")
 const logInController = require("./controller/logInController");
 const reservationController = require("./controller/reservationController");
+const middlewareRouting = require("./middleware/middlewareRouting");
 
 const app = express();
+const router = express.Router();
 const port = 3000;
 const swaggerOptions = {
     definition: {
@@ -37,25 +39,28 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs, { explorer: 
 app.use(express.json());
 app.use(helmet());
 app.use(cors());
+app.use("/", router);
 
 async function runServer() {
     if (!server) {
         try {
             await databaseService.connect();
 
-            logInController(app);
-        reservationController(app);
+            middlewareRouting(router);
 
-        server = app.listen(port, () => {
-            LOG.info(__filename, `App listening on port ${port}`);
-        }).on("error", (err) => {
-            LOG.error(__filename, err, "Listen error");
-            databaseService.disconnect();
-        });
-      }
-      catch (err) {
-          LOG.error(__filename, err, "Error in main");
-      }
+            logInController(app);
+            reservationController(app);
+
+            server = app.listen(port, () => {
+                LOG.info(__filename, `App listening on port ${port}`);
+            }).on("error", (err) => {
+                LOG.error(__filename, err, "Listen error");
+                databaseService.disconnect();
+            });
+        }
+        catch (err) {
+            LOG.error(__filename, err, "Error in main");
+        }
     }
 }
 

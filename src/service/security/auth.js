@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const UnauthorizedError = require("../../utils/errors").UnauthorizedError;
 
 const TOKEN_KEY = process.env.TOKEN_KEY || "";
 
@@ -33,16 +34,17 @@ module.exports.verify = function (token, roles = []) {
 
         if (ok) {
             jwt.verify(token, TOKEN_KEY);
-            return true;
+            return decoded;
         }
         else {
-            LOG.error(__filename, new Error("Invalid role"), "The owner of the token does not have the right role for this operation");
-            return false;
+            const err = new UnauthorizedError("Invalid role");
+            LOG.error(__filename, err, "The owner of the token does not have the right role for this operation");
+            throw err;
         }
     }
     catch (err) {
         LOG.error(__filename, err, "The token verification failed");
-        return false;
+        throw err;
     }
 }
 
