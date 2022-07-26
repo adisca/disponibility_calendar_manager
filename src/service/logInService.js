@@ -3,6 +3,7 @@ const repo = require("../repo/logInRepo");
 const Account = require("../model/Account");
 const errorService = require("./errorService");
 const auth = require("./security/auth");
+const validators = require("../utils/validators");
 
 function validatePassword(pass) {
     // Basic validations, not to be used in production
@@ -14,6 +15,9 @@ function validatePassword(pass) {
 
 module.exports.registerUser = function (req, res) {
     let userJson = req.body;
+
+    if (!validators.jsonFieldPresentWrapper(userJson, ["email", "password", "name"], res, __filename))
+        return;
 
     userJson["role"] = roleEnum.enum.USER_ROLE;
 
@@ -37,7 +41,12 @@ module.exports.registerUser = function (req, res) {
 }
 
 module.exports.login = function (req, res) {
-    repo.verifyAccountLogin(req.body)
+    let credentialsJson = req.body;
+
+    if (!validators.jsonFieldPresentWrapper(credentialsJson, ["email", "password"], res, __filename))
+        return;
+
+    repo.verifyAccountLogin(credentialsJson)
         .then((account) => {
             const token = auth.sign(account);
             res.status(200).send({

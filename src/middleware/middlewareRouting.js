@@ -1,4 +1,4 @@
-const tokenValidationMiddleware = require("../middleware/tokenValidationMiddleware");
+const tokenValidationMiddleware = require("./tokenValidationMiddleware");
 
 module.exports = function (router) {
     LOG.info(__filename, "Middleware routing enabled");
