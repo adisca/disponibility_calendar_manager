@@ -30,7 +30,7 @@
  *                              description: Success message
  *                              example: Successfully added reservation(s)
  *              400:
- *                  description: Failed to add reservation
+ *                  description: Failed to add reservation. One of the validations was unfulfilled.
  *                  content:
  *                      application/json:
  *                          schema:

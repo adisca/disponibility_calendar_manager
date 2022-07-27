@@ -89,7 +89,7 @@ describe("POST /register", () => {
             .post("/register")
             .send(goodUser1)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(200);
                 done();
@@ -102,7 +102,7 @@ describe("POST /register", () => {
             .post("/register")
             .send(goodUser2)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(200);
                 done();
@@ -114,7 +114,7 @@ describe("POST /register", () => {
             .post("/register")
             .send(badUser1)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(400);
                 done();
@@ -126,7 +126,7 @@ describe("POST /register", () => {
             .post("/register")
             .send(badUser2)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(400);
                 done();
@@ -138,7 +138,7 @@ describe("POST /register", () => {
             .post("/register")
             .send(badUser3)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(400);
                 done();
@@ -150,7 +150,7 @@ describe("POST /register", () => {
             .post("/register")
             .send(badUser4)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(400);
                 done();
@@ -162,7 +162,7 @@ describe("POST /register", () => {
             .post("/register")
             .send(badUser5)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(400);
                 done();

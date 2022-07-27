@@ -70,7 +70,7 @@ describe("POST /reservation", () => {
                             .end((err, res) => {
                                 if (err)
                                     reject(err);
-                                goodToken1 = res.body.token;
+                                goodToken1 = res.body.authToken;
                                 chai.request(server)
                                     .post("/register")
                                     .send(user2)
@@ -83,7 +83,7 @@ describe("POST /reservation", () => {
                                             .end((err, res) => {
                                                 if (err)
                                                     reject(err);
-                                                goodToken2 = res.body.token;
+                                                goodToken2 = res.body.authToken;
                                                 resolve();
                                             });
                                     });
@@ -107,7 +107,7 @@ describe("POST /reservation", () => {
             .post("/reservation/add")
             .send(goodReservation1)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(401);
                 done();
@@ -120,7 +120,7 @@ describe("POST /reservation", () => {
             .send(goodReservation1)
             .set("authorization", "Bearer " + goodToken1)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(200);
                 done();
@@ -133,7 +133,7 @@ describe("POST /reservation", () => {
             .send(goodReservation2)
             .set("authorization", "Bearer " + goodToken1)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(200);
                 done();
@@ -146,7 +146,7 @@ describe("POST /reservation", () => {
             .send(goodReservation3)
             .set("authorization", "Bearer " + goodToken2)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(200);
                 done();
@@ -159,7 +159,7 @@ describe("POST /reservation", () => {
             .send(goodReservation1)
             .set("authorization", "Bearer " + goodToken2)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(200);
                 done();
@@ -172,7 +172,7 @@ describe("POST /reservation", () => {
             .send(goodReservation1)
             .set("authorization", "Bearer " + goodToken1)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(200);
                 done();
@@ -185,7 +185,7 @@ describe("POST /reservation", () => {
             .send(goodReservation1)
             .set("authorization", "Bearer " + badToken)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(401);
                 done();
@@ -198,7 +198,7 @@ describe("POST /reservation", () => {
             .send(badReservation1)
             .set("authorization", "Bearer " + goodToken1)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(400);
                 done();
@@ -211,7 +211,7 @@ describe("POST /reservation", () => {
             .send(badReservation2)
             .set("authorization", "Bearer " + goodToken1)
             .end((err, res) => {
-                expect(err).is.null;
+                expect(err).to.not.exist;
 
                 expect(res).to.have.status(400);
                 done();
