@@ -53,8 +53,17 @@ module.exports.refresh = function (req, res) {
 function generateNew(accountId) {
 
     return new Promise(async (resolve, reject) => {
+        let token;
+
+        try {
+            token = encryptor.generateRandomString();
+        } catch (err) {
+            reject(err);
+            return;
+        }
+
         let refreshToken = new RefreshToken({
-            token: encryptor.generateRandomUUID(),
+            token: token,
             accountId: accountId
         });
 
@@ -73,7 +82,13 @@ function generateNew(accountId) {
                     // Duplicate key error
                     if (err.name === "MongoServerError" && err.message.split(" ")[0] === "E11000" && i > 0) {
                         LOG.error(__filename, err, "Tries remaining: " + i.toString());
-                        refreshToken.token = encryptor.generateRandomUUID();
+                        try {
+                            refreshToken.token = encryptor.generateRandomString();
+                        } catch (err) {
+                            reject(err);
+                            i = 0;
+                            return;
+                        }
                     }
                     else {
                         finalError = err;

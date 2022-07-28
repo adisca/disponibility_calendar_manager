@@ -1,6 +1,6 @@
 const RefreshToken = require("../model/RefreshToken");
 const Account = require("../model/Account");
-const NotFoundError = require("../utils/errors").NotFoundError
+const NotFoundError = require("../utils/errors").NotFoundError;
 
 module.exports.searchAndDestroy = function (token) {
     return new Promise((resolve, reject) => {

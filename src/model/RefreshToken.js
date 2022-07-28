@@ -28,7 +28,7 @@
 
 const mongoose = require("mongoose");
 
-const EXPIRES_IN = "1w"
+const EXPIRES_IN = "1w";
 
 const schema = new mongoose.Schema({
     token: {

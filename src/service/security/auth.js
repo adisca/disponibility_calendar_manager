@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const ForbiddenError = require("../../utils/errors").ForbiddenError;
 
 const TOKEN_KEY = process.env.TOKEN_KEY || "";
-const EXPIRES_IN = "12h"
+const EXPIRES_IN = "12h";
 
 module.exports.sign = function (account) {
     if (!account || !account.id || !account.role) {
