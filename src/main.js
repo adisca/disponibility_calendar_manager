@@ -11,6 +11,7 @@ const swaggerUi = require("swagger-ui-express");
 const databaseService = require("./service/databaseService")
 const logInController = require("./controller/logInController");
 const reservationController = require("./controller/reservationController");
+const refreshTokenController = require("./controller/refreshTokenController");
 const middlewareRouting = require("./middleware/middlewareRouting");
 
 const app = express();
@@ -50,6 +51,7 @@ async function runServer() {
 
             logInController(app);
             reservationController(app);
+            refreshTokenController(app);
 
             server = app.listen(port, () => {
                 LOG.info(__filename, `App listening on port ${port}`);

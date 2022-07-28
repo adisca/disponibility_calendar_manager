@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
-const UnauthorizedError = require("../../utils/errors").UnauthorizedError;
+const ForbiddenError = require("../../utils/errors").ForbiddenError;
 
 const TOKEN_KEY = process.env.TOKEN_KEY || "";
+const EXPIRES_IN = "12h";
 
 module.exports.sign = function (account) {
     if (!account || !account.id || !account.role) {
@@ -16,13 +17,15 @@ module.exports.sign = function (account) {
         },
         TOKEN_KEY,
         {
-            expiresIn: "12h"
+            expiresIn: EXPIRES_IN
         }
     );
 }
 
 module.exports.verify = function (token, roles = []) {
     try {
+        jwt.verify(token, TOKEN_KEY);
+
         const decoded = jwt.decode(token);
         var ok = false;
 
@@ -33,11 +36,10 @@ module.exports.verify = function (token, roles = []) {
                 ok = true;
 
         if (ok) {
-            jwt.verify(token, TOKEN_KEY);
             return decoded;
         }
         else {
-            const err = new UnauthorizedError("Invalid role");
+            const err = new ForbiddenError("Invalid role");
             LOG.error(__filename, err, "The owner of the token does not have the right role for this operation");
             throw err;
         }

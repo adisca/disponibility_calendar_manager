@@ -58,21 +58,30 @@
  *                              password: "1234"
  *          responses:
  *              200:
- *                  description: Log in successfull. A token and a message has been returned.
+ *                  description: Log in successfull. An authentication token, a refresh token and a message has been returned.
  *                  content:
  *                      application/json:
  *                          schema:
  *                              example:
- *                                  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOiI2MmNkNGUxZWYzYzcyMjlmY2VjNjAzNzgiLCJyb2xlIjoiVVNFUl9ST0xFIiwiaWF0IjoxNjU3NzkxNTczLCJleHAiOjE2NTc4MzQ3NzN9.eLjk1k7AM2pEGIwjCQLERzGRtXvNUO3RWGAc9awMl3g"
+ *                                  authToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOiI2MmNkNGUxZWYzYzcyMjlmY2VjNjAzNzgiLCJyb2xlIjoiVVNFUl9ST0xFIiwiaWF0IjoxNjU3NzkxNTczLCJleHAiOjE2NTc4MzQ3NzN9.eLjk1k7AM2pEGIwjCQLERzGRtXvNUO3RWGAc9awMl3g"
+ *                                  refreshToken: "405b840f-e907-4d4a-834b-832cc6ef6574"
  *                                  msg: "Log in successful"
  *              400:
- *                  description: Failed to log in. One or both of the credentials is wrong.
+ *                  description: Failed to log in. Credentials are wrong or missing.
  *                  content:
  *                      application/json:
  *                          schema:
  *                              type: string
  *                              description: Error message
  *                              example: Error Wrong password
+ *              404:
+ *                  description: Failed to log in. Email is not registered.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: string
+ *                              description: Error message
+ *                              example: NotFoundError Email not found
  */
 
 const logInService = require("../service/logInService");

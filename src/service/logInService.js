@@ -4,6 +4,7 @@ const Account = require("../model/Account");
 const errorService = require("./errorService");
 const auth = require("./security/auth");
 const validators = require("../utils/validators");
+const refreshTokenService = require("./refreshTokenService");
 
 function validatePassword(pass) {
     // Basic validations, not to be used in production
@@ -24,7 +25,7 @@ module.exports.registerUser = function (req, res) {
     if (!validatePassword(userJson["password"])) {
         const err = new Error("Bad password");
         LOG.error(__filename, err, "The password could not be hashed because it failed the validation");
-        errorService.error400(res, err, "The password could not be hashed because it failed the validation");
+        errorService.error(res, err, "The password could not be hashed because it failed the validation");
         return;
     }
 
@@ -47,15 +48,17 @@ module.exports.login = function (req, res) {
         return;
 
     repo.verifyAccountLogin(credentialsJson)
-        .then((account) => {
-            const token = auth.sign(account);
+        .then(async (account) => {
+            const authToken = auth.sign(account);
+            const refreshToken = await refreshTokenService.generateNew(account.id);
             res.status(200).send({
-                token: token,
+                authToken: authToken,
+                refreshToken: refreshToken.token,
                 msg: "Log in successful"
             });
         })
         .catch((err) => {
             LOG.error(__filename, err, "Log in failed");
-            errorService.error400(res, err, "Log in failed");
+            errorService.error(res, err, "Log in failed");
         });
 }

@@ -1,5 +1,6 @@
 const encryptor = require("../service/security/encryptor");
 const Account = require("../model/Account");
+const NotFoundError = require("../utils/errors").NotFoundError;
 
 module.exports.createUser = function (user) {
     return new Promise((resolve, reject) => {
@@ -20,7 +21,7 @@ module.exports.verifyAccountLogin = function (credentials) {
         Account.findOne({ "email": credentials.email })
             .then((result) => {
                 if (!result) {
-                    const err = new Error("Email not found");
+                    const err = new NotFoundError("Email not found");
                     LOG.error(__filename, err);
                     reject(err);
                     return;

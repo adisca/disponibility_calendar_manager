@@ -1,7 +1,7 @@
 const expect = require("chai").expect;
 const auth = require("../src/service/security/auth");
 const Role = require("../src/model/enums/Role");
-const UnauthorizedError = require("../src/utils/errors").UnauthorizedError;
+const ForbiddenError = require("../src/utils/errors").ForbiddenError;
 
 describe("Auth service testing", () => {
     const accountGood = {
@@ -45,7 +45,7 @@ describe("Auth service testing", () => {
 
     it("It should fail the verification of a good token if the role is unauthorised", (done) => {
         const token = auth.sign(accountGood);
-        expect(() => auth.verify(token, [Role.enum.ADMIN_ROLE])).to.throw(UnauthorizedError);
+        expect(() => auth.verify(token, [Role.enum.ADMIN_ROLE])).to.throw(ForbiddenError);
         done();
     });
 
