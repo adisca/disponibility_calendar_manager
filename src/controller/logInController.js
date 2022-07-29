@@ -86,7 +86,7 @@
 
 const logInService = require("../service/logInService");
 
-module.exports = function (app) {
+module.exports = function (app, _middlewareRouter) {
     app.post("/register", logInService.registerUser);
 
     app.post("/login", logInService.login);

@@ -115,9 +115,12 @@
  */
 
 const reservationService = require("../service/reservationService.js");
+const tokenValidationMiddleware = require("../middleware/tokenValidationMiddleware");
 
-module.exports = function (app) {
+module.exports = function (app, middlewareRouter) {
     app.post("/reservation/add", reservationService.addReservation);
-
     app.get("/reservation/interval", reservationService.getInterval);
+
+    middlewareRouter.post("/reservation/add", tokenValidationMiddleware.userRoleWrapper);
+    middlewareRouter.get("/reservation/interval", tokenValidationMiddleware.userRoleWrapper);
 }
