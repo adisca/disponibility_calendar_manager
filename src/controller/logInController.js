@@ -24,7 +24,7 @@
  *                              address: "Romania, Cluj, Cluj-Napoca, Str. Dorobantilor"
  *                              phoneNb: "1234 123 123"
  *          responses:
- *              200:
+ *              201:
  *                  description: User created successfully
  *                  content:
  *                      application/json:

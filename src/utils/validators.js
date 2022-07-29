@@ -2,7 +2,7 @@ const errorService = require("../service/errorService");
 
 function jsonFieldPresent(json, fields) {
     for (let field of fields) {
-        if (!json[field]) {
+        if (json[field] === undefined) {
             throw new Error("Required field " + field + " is missing in json");
         }
     }
@@ -38,3 +38,8 @@ function jsonFieldPresentWrapper(json, fields, res, callerFilename) {
 
 module.exports.jsonFieldPresent = jsonFieldPresent;
 module.exports.jsonFieldPresentWrapper = jsonFieldPresentWrapper;
+
+module.exports.dateValidator = function (v) {
+    const d = new Date(v);
+    return d instanceof Date && !isNaN(d) && v === d.toISOString().split("T")[0];
+}
