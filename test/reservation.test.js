@@ -104,7 +104,7 @@ describe("POST /reservation", () => {
 
     it("It should not work without a token", (done) => {
         chai.request(server)
-            .post("/reservation/add")
+            .post("/reservation")
             .send(goodReservation1)
             .end((err, res) => {
                 expect(err).to.not.exist;
@@ -116,7 +116,7 @@ describe("POST /reservation", () => {
 
     it("It should work when everythin is fine", (done) => {
         chai.request(server)
-            .post("/reservation/add")
+            .post("/reservation")
             .send(goodReservation1)
             .set("authorization", "Bearer " + goodToken1)
             .end((err, res) => {
@@ -129,7 +129,7 @@ describe("POST /reservation", () => {
 
     it("It should work when adding hours to existing account-date pair", (done) => {
         chai.request(server)
-            .post("/reservation/add")
+            .post("/reservation")
             .send(goodReservation2)
             .set("authorization", "Bearer " + goodToken1)
             .end((err, res) => {
@@ -142,7 +142,7 @@ describe("POST /reservation", () => {
 
     it("It should succeed with another user, different date", (done) => {
         chai.request(server)
-            .post("/reservation/add")
+            .post("/reservation")
             .send(goodReservation3)
             .set("authorization", "Bearer " + goodToken2)
             .end((err, res) => {
@@ -155,7 +155,7 @@ describe("POST /reservation", () => {
 
     it("It should succeed with another user, same date as first", (done) => {
         chai.request(server)
-            .post("/reservation/add")
+            .post("/reservation")
             .send(goodReservation1)
             .set("authorization", "Bearer " + goodToken2)
             .end((err, res) => {
@@ -168,7 +168,7 @@ describe("POST /reservation", () => {
 
     it("It should succeed when trying to add the exact same reservation (or a smaller one with the same hours)", (done) => {
         chai.request(server)
-            .post("/reservation/add")
+            .post("/reservation")
             .send(goodReservation1)
             .set("authorization", "Bearer " + goodToken1)
             .end((err, res) => {
@@ -181,7 +181,7 @@ describe("POST /reservation", () => {
 
     it("It should fail with a bad token", (done) => {
         chai.request(server)
-            .post("/reservation/add")
+            .post("/reservation")
             .send(goodReservation1)
             .set("authorization", "Bearer " + badToken)
             .end((err, res) => {
@@ -194,7 +194,7 @@ describe("POST /reservation", () => {
 
     it("It should fail when the hours fail validation by being outside 0-23 interval", (done) => {
         chai.request(server)
-            .post("/reservation/add")
+            .post("/reservation")
             .send(badReservation1)
             .set("authorization", "Bearer " + goodToken1)
             .end((err, res) => {
@@ -207,7 +207,7 @@ describe("POST /reservation", () => {
 
     it("It should fail when the date is invalid", (done) => {
         chai.request(server)
-            .post("/reservation/add")
+            .post("/reservation")
             .send(badReservation2)
             .set("authorization", "Bearer " + goodToken1)
             .end((err, res) => {
