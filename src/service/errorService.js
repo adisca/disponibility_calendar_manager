@@ -20,6 +20,7 @@ module.exports.error = function (res, err, msg = null) {
             break;
         case "InternalError":
         case "TypeError":
+        case "ReferenceError":
             this.error500(res, err, msg);
             break;
         default:
