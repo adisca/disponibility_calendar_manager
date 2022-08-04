@@ -41,9 +41,20 @@ module.exports.addReservationMany = function (reservations) {
     return new Promise(async (resolve, reject) => {
         try {
 
+            if (reservations.length <= 0)
+                throw new Error("Empty array");
+
+            let dates = [];
             let bulkOps = [];
             for (let reservation of reservations) {
+
                 await Reservation.validate(reservation);
+                if (reservation.hour.length <= 0)
+                    throw new Error("Empty hour list");
+                if (dates.indexOf(reservation.date) >= 0)
+                    throw new Error("Duplicate dates");
+                dates.push(reservation.date);
+
                 bulkOps.push({
                     updateOne: {
                         filter: {
