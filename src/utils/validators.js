@@ -36,5 +36,36 @@ function jsonFieldPresentWrapper(json, fields, res, callerFilename) {
     return true;
 }
 
+/**
+ * Same thing as the single one, but takes an array as an input
+ * and checks each member individually
+ * 
+ * @param {*} jsons An array of jsons to be validated
+ * @param {string[]} fields The fields that must be present
+ * @param {*} res The response
+ * @param {string} callerFilename The filename of the calling mehod
+ * @returns True if succeeded, false otherwise
+ */
+function jsonManyFieldPresentWrapper(jsons, fields, res, callerFilename) {
+    let i;
+    try {
+        for (i in jsons)
+            jsonFieldPresent(jsons[i], fields);
+    }
+    catch (err) {
+        let msg = "Required fields:"
+        for (let field of fields) {
+            msg += " " + field;
+        }
+        msg += "\n\tIn member Nb: " + i.toString();
+        LOG.error(__filename, new Error("Json field not present"));
+        LOG.error(callerFilename, err, msg);
+        errorService.error400(res, err, msg);
+        return false;
+    }
+    return true;
+}
+
 module.exports.jsonFieldPresent = jsonFieldPresent;
 module.exports.jsonFieldPresentWrapper = jsonFieldPresentWrapper;
+module.exports.jsonManyFieldPresentWrapper = jsonManyFieldPresentWrapper;
