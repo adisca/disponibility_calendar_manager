@@ -125,7 +125,7 @@ describe("DELETE /reservation", () => {
                     let res;
 
                     res = await chai.request(server).post("/register").send(user1);
-                    if (res.status != 200)
+                    if (res.status != 201)
                         throw new Error("Failed to initialize");
 
                     res = await chai.request(server).post("/login").send(user1);
@@ -135,7 +135,7 @@ describe("DELETE /reservation", () => {
 
 
                     res = await chai.request(server).post("/register").send(user2);
-                    if (res.status != 200)
+                    if (res.status != 201)
                         throw new Error("Failed to initialize");
 
                     res = await chai.request(server).post("/login").send(user2);
@@ -147,28 +147,28 @@ describe("DELETE /reservation", () => {
                         .post("/reservation")
                         .set("authorization", "Bearer " + token1)
                         .send(reservation1);
-                    if (res.status != 200)
+                    if (res.status != 201)
                         throw new Error("Failed to initialize");
 
                     res = await chai.request(server)
                         .post("/reservation")
                         .set("authorization", "Bearer " + token2)
                         .send(reservation2);
-                    if (res.status != 200)
+                    if (res.status != 201)
                         throw new Error("Failed to initialize");
 
                     res = await chai.request(server)
                         .post("/reservation")
                         .set("authorization", "Bearer " + token1)
                         .send(reservation3);
-                    if (res.status != 200)
+                    if (res.status != 201)
                         throw new Error("Failed to initialize");
 
                     res = await chai.request(server)
                         .post("/reservation")
                         .set("authorization", "Bearer " + token2)
                         .send(reservation4);
-                    if (res.status != 200)
+                    if (res.status != 201)
                         throw new Error("Failed to initialize");
 
                     resolve();
@@ -344,19 +344,17 @@ describe("DELETE /reservation", () => {
             });
     });
 
-    // // Not quite implemented yet
+    it("It should not work with 6", (done) => {
+        chai.request(server)
+            .delete("/reservation")
+            .set("authorization", "Bearer " + token1)
+            .send(badDeletion6)
+            .end((err, res) => {
+                expect(err).to.not.exist;
 
-    // it("It should not work with 6", (done) => {
-    //     chai.request(server)
-    //         .delete("/reservation")
-    //         .set("authorization", "Bearer " + token1)
-    //         .send(badDeletion6)
-    //         .end((err, res) => {
-    //             expect(err).to.not.exist;
-
-    //             expect(res).to.have.status(400);
-    //             done();
-    //         });
-    // });
+                expect(res).to.have.status(400);
+                done();
+            });
+    });
 
 });

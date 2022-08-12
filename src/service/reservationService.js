@@ -58,6 +58,13 @@ module.exports.deleteReservation = function (req, res) {
     if (!validators.jsonFieldPresentWrapper(reservationJson, ["date", "hour"], res, __filename))
         return;
 
+    if (!validators.dateValidator(reservationJson.date)) {
+        const err = new Error("Invalid date");
+        LOG.error(__filename, err, "Accepted formats: YYYY-MM-DD");
+        errorService.error(res, err, "Accepted formats: YYYY-MM-DD");
+        return;
+    }
+
     reservationJson["accountId"] = req.payload.id;
 
     repo.deleteReservation(reservationJson)

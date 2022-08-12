@@ -50,6 +50,8 @@
  *      delete:
  *          summary: Tries to delete a reservation
  *          tags: [Reservation]
+ *          security:
+ *            - BearerAuth: []
  *          requestBody:
  *              required: true
  *              content:

@@ -88,28 +88,28 @@ describe("GET /reservation/interval?startDate=&endDate=", () => {
                         throw new Error("Failed to initialize");
 
                     res = await chai.request(server)
-                        .post("/reservation/add")
+                        .post("/reservation")
                         .set("authorization", "Bearer " + token1)
                         .send(reservation1);
                     if (res.status != 201)
                         throw new Error("Failed to initialize");
 
                     res = await chai.request(server)
-                        .post("/reservation/add")
+                        .post("/reservation")
                         .set("authorization", "Bearer " + token2)
                         .send(reservation2);
                     if (res.status != 201)
                         throw new Error("Failed to initialize");
 
                     res = await chai.request(server)
-                        .post("/reservation/add")
+                        .post("/reservation")
                         .set("authorization", "Bearer " + token1)
                         .send(reservation3);
                     if (res.status != 201)
                         throw new Error("Failed to initialize");
 
                     res = await chai.request(server)
-                        .post("/reservation/add")
+                        .post("/reservation")
                         .set("authorization", "Bearer " + token2)
                         .send(reservation4);
                     if (res.status != 201)
