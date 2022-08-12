@@ -11,6 +11,8 @@
  *      post:
  *          summary: Tries add a new reservation
  *          tags: [Reservation]
+ *          security:
+ *            - BearerAuth: []
  *          requestBody:
  *              required: true
  *              content:
@@ -53,14 +55,21 @@
  *      get:
  *          summary: Returns the reservations within the interval
  *          tags: [Reservation]
- *          requestBody:
- *              required: true
- *              content:
- *                  application/json:
- *                      schema:
- *                          example:
- *                              "startDate": "2000-12-10"
- *                              "endDate": "2000-12-11"
+ *          security:
+ *            - BearerAuth: []
+ *          parameters:
+ *            - in: query
+ *              name: startDate
+ *              schema:
+ *                  type: string
+ *                  example: 2000-12-10
+ *              description: The start date of the interval
+ *            - in: query
+ *              name: endDate
+ *              schema:
+ *                  type: string
+ *                  example: 2000-12-12
+ *              description: The end date of the interval
  *          responses:
  *              200:
  *                  description: Reservations returned successfully

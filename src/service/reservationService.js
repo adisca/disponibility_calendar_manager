@@ -24,9 +24,9 @@ module.exports.addReservation = function (req, res) {
 }
 
 module.exports.getInterval = function (req, res) {
-    let intervalJson = req.body;
+    let intervalJson = req.query;
 
-    if (!validators.jsonFieldPresentWrapper(intervalJson, ["startDate", "endDate"], res, __filename))
+    if (!validators.jsonQueryPresentWrapper(intervalJson, ["startDate", "endDate"], res, __filename))
         return;
 
     if (!validators.dateValidator(intervalJson.startDate) || !validators.dateValidator(intervalJson.endDate)) {

@@ -6,7 +6,9 @@ const mongoose = require("mongoose");
 
 chai.use(chaiHttp);
 
-describe("POST /reservation", () => {
+describe("GET /reservation/interval?startDate=&endDate=", () => {
+    const route = "/reservation/interval";
+
     // The test user
     const user1 = {
         email: "test1@test.com",
@@ -43,33 +45,15 @@ describe("POST /reservation", () => {
         hour: [5, 16]
     };
 
-    const goodInterval1 = {
-        startDate: "2000-12-10",
-        endDate: "2000-12-11"
-    }
-    const goodInterval2 = {
-        startDate: "2000-12-10",
-        endDate: "2000-12-10"
-    }
-    const goodInterval3 = {
-        startDate: "1999-01-01",
-        endDate: "2001-12-30"
-    }
+    const goodInterval1 = "?startDate=2000-12-10&endDate=2000-12-11";
+    const goodInterval2 = "?startDate=2000-12-10&endDate=2000-12-10";
+    const goodInterval3 = "?startDate=1999-01-01&endDate=2001-12-30";
     // Good interval, but will give a 404
-    const goodInterval4 = {
-        startDate: "2020-12-10",
-        endDate: "2020-12-11"
-    }
+    const goodInterval4 = "?startDate=2020-12-10&endDate=2020-12-11";
 
-    const badInterval1 = {}
-    const badInterval2 = {
-        startDate: "2000-12-10",
-        endDate: "2000-12-33"
-    }
-    const badInterval3 = {
-        startDate: "2000-12-11",
-        endDate: "2000-12-10"
-    }
+    const badInterval1 = "";
+    const badInterval2 = "?startDate=2000-12-10&endDate=2000-12-33";
+    const badInterval3 = "?startDate=2000-12-11&endDate=2000-12-10";
 
     before(function () {
         return new Promise((resolve, reject) => {
@@ -151,8 +135,7 @@ describe("POST /reservation", () => {
 
     it("It should not work without a token", (done) => {
         chai.request(server)
-            .get("/reservation/interval")
-            .send(goodInterval1)
+            .get(route + goodInterval1)
             .end((err, res) => {
                 expect(err).to.not.exist;
 
@@ -163,9 +146,8 @@ describe("POST /reservation", () => {
 
     it("It should not work with an invalid token", (done) => {
         chai.request(server)
-            .get("/reservation/interval")
+            .get(route + goodInterval1)
             .set("authorization", "Bearer " + badToken)
-            .send(goodInterval1)
             .end((err, res) => {
                 expect(err).to.not.exist;
 
@@ -176,17 +158,16 @@ describe("POST /reservation", () => {
 
     it("It should work with a good interval, checking the entire result", (done) => {
         chai.request(server)
-            .get("/reservation/interval")
+            .get(route + goodInterval1)
             .set("authorization", "Bearer " + token1)
-            .send(goodInterval1)
             .end((err, res) => {
                 expect(err).to.not.exist;
 
                 expect(res).to.have.status(200);
                 expect(res.body.length).to.be.equal(2);
 
-                expect(res.body[0].date).to.be.equal(goodInterval1.startDate);
-                expect(res.body[1].date).to.be.equal(goodInterval1.endDate);
+                expect(res.body[0].date).to.be.equal("2000-12-10");
+                expect(res.body[1].date).to.be.equal("2000-12-11");
 
                 expect(res.body[0].reservedHours.length).to.be.equal(4);
                 expect(res.body[1].reservedHours.length).to.be.equal(3);
@@ -213,16 +194,15 @@ describe("POST /reservation", () => {
 
     it("It should work with a single day interval", (done) => {
         chai.request(server)
-            .get("/reservation/interval")
+            .get(route + goodInterval2)
             .set("authorization", "Bearer " + token1)
-            .send(goodInterval2)
             .end((err, res) => {
                 expect(err).to.not.exist;
 
                 expect(res).to.have.status(200);
                 expect(res.body.length).to.be.equal(1);
 
-                expect(res.body[0].date).to.be.equal(goodInterval2.startDate);
+                expect(res.body[0].date).to.be.equal("2000-12-10");
 
                 expect(res.body[0].reservedHours.length).to.be.equal(4);
 
@@ -244,23 +224,8 @@ describe("POST /reservation", () => {
 
     it("It should work with a wider interval", (done) => {
         chai.request(server)
-            .get("/reservation/interval")
+            .get(route + goodInterval3)
             .set("authorization", "Bearer " + token1)
-            .send(goodInterval3)
-            .end((err, res) => {
-                expect(err).to.not.exist;
-
-                expect(res).to.have.status(200);
-                expect(res.body.length).to.be.equal(3);
-                done();
-            });
-    });
-
-    it("It should work with a wider interval", (done) => {
-        chai.request(server)
-            .get("/reservation/interval")
-            .set("authorization", "Bearer " + token1)
-            .send(goodInterval3)
             .end((err, res) => {
                 expect(err).to.not.exist;
 
@@ -272,9 +237,8 @@ describe("POST /reservation", () => {
 
     it("It fail should return a not found error for a valid interval with no hits", (done) => {
         chai.request(server)
-            .get("/reservation/interval")
+            .get(route + goodInterval4)
             .set("authorization", "Bearer " + token1)
-            .send(goodInterval4)
             .end((err, res) => {
                 expect(err).to.not.exist;
 
@@ -285,9 +249,8 @@ describe("POST /reservation", () => {
 
     it("It should fail for an interval missing fields", (done) => {
         chai.request(server)
-            .get("/reservation/interval")
+            .get(route + badInterval1)
             .set("authorization", "Bearer " + token1)
-            .send(badInterval1)
             .end((err, res) => {
                 expect(err).to.not.exist;
 
@@ -298,9 +261,8 @@ describe("POST /reservation", () => {
 
     it("It should fail for an interval with invalid dates/formats", (done) => {
         chai.request(server)
-            .get("/reservation/interval")
+            .get(route + badInterval2)
             .set("authorization", "Bearer " + token1)
-            .send(badInterval2)
             .end((err, res) => {
                 expect(err).to.not.exist;
 
@@ -311,9 +273,8 @@ describe("POST /reservation", () => {
 
     it("It should fail for an interval with the startDate greater than the endDate", (done) => {
         chai.request(server)
-            .get("/reservation/interval")
+            .get(route + badInterval3)
             .set("authorization", "Bearer " + token1)
-            .send(badInterval3)
             .end((err, res) => {
                 expect(err).to.not.exist;
 

@@ -36,8 +36,33 @@ function jsonFieldPresentWrapper(json, fields, res, callerFilename) {
     return true;
 }
 
-module.exports.jsonFieldPresent = jsonFieldPresent;
+function jsonQueryPresent(json, fields) {
+    for (let field of fields) {
+        if (json[field] === undefined) {
+            throw new Error("Required query string " + field + " is missing in url");
+        }
+    }
+}
+
+function jsonQueryPresentWrapper(json, fields, res, callerFilename) {
+    try {
+        jsonQueryPresent(json, fields);
+    }
+    catch (err) {
+        let msg = "Required query strings:"
+        for (let field of fields) {
+            msg += " " + field;
+        }
+        LOG.error(__filename, new Error("String query not present"));
+        LOG.error(callerFilename, err, msg);
+        errorService.error400(res, err, msg);
+        return false;
+    }
+    return true;
+}
+
 module.exports.jsonFieldPresentWrapper = jsonFieldPresentWrapper;
+module.exports.jsonQueryPresentWrapper = jsonQueryPresentWrapper;
 
 module.exports.dateValidator = function (v) {
     const d = new Date(v);

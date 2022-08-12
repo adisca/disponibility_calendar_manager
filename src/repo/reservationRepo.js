@@ -103,6 +103,7 @@ module.exports.getInterval = function (intervalJson) {
                     return;
                 }
 
+                LOG.info(__filename, "Fetched intervals successfully");
                 resolve(doc);
             })
     });

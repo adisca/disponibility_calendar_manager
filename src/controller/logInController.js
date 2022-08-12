@@ -1,5 +1,14 @@
 /**
  * @swagger
+ * components:
+ *      securitySchemes:
+ *          BearerAuth:
+ *              type: http
+ *              scheme: bearer
+ */
+
+/**
+ * @swagger
  * tags:
  *      name: Log In
  *      description: Sign up/in API
