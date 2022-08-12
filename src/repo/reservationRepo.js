@@ -48,7 +48,7 @@ module.exports.addReservationMany = function (reservations) {
             let dates = [];
             let bulkOps = [];
             for (let reservation of reservations) {
-
+                // Validates date and hours
                 await Reservation.validate(reservation);
                 if (reservation.hour.length <= 0)
                     throw new Error("Empty hour list");

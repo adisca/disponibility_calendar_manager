@@ -97,7 +97,7 @@ describe("POST /reservation/many", () => {
                     let res;
 
                     res = await chai.request(server).post("/register").send(user1);
-                    if (res.status != 200)
+                    if (res.status != 201)
                         throw new Error("Failed to initialize");
 
                     res = await chai.request(server).post("/login").send(user1);
@@ -107,7 +107,7 @@ describe("POST /reservation/many", () => {
 
 
                     res = await chai.request(server).post("/register").send(user2);
-                    if (res.status != 200)
+                    if (res.status != 201)
                         throw new Error("Failed to initialize");
 
                     res = await chai.request(server).post("/login").send(user2);
