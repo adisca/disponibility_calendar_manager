@@ -26,6 +26,13 @@ module.exports.addReservation = function (req, res) {
 module.exports.addReservationMany = function (req, res) {
     let reservationJsons = req.body;
 
+    if (!Array.isArray(reservationJsons)) {
+        const err = new Error("Input is not an array");
+        LOG.error(__filename, err, "Failed to add reservations");
+        errorService.error(res, err, "Failed to add reservations");
+        return;
+    }
+
     if (!validators.jsonManyFieldPresentWrapper(reservationJsons, ["date", "hour"], res, __filename))
         return;
 

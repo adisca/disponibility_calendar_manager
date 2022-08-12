@@ -82,6 +82,7 @@ describe("POST /reservation/many", () => {
             date: "2000-13-10",
             hour: [1, 3, 10]
         }];
+    const badReservation7 = null;
 
     before(function () {
         return new Promise((resolve, reject) => {
@@ -306,6 +307,19 @@ describe("POST /reservation/many", () => {
             .post("/reservation/many")
             .set("authorization", "Bearer " + goodToken1)
             .send(badReservation6)
+            .end((err, res) => {
+                expect(err).to.not.exist;
+
+                expect(res).to.have.status(400);
+                done();
+            });
+    });
+
+    it("It should not work when the input is not an array", (done) => {
+        chai.request(server)
+            .post("/reservation/many")
+            .set("authorization", "Bearer " + goodToken1)
+            .send(badReservation7)
             .end((err, res) => {
                 expect(err).to.not.exist;
 
