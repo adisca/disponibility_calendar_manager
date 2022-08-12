@@ -12,10 +12,9 @@ const databaseService = require("./service/databaseService")
 const logInController = require("./controller/logInController");
 const reservationController = require("./controller/reservationController");
 const refreshTokenController = require("./controller/refreshTokenController");
-const middlewareRouting = require("./middleware/middlewareRouting");
 
 const app = express();
-const router = express.Router();
+const middlewareRouter = express.Router();
 const port = 3000;
 const swaggerOptions = {
     definition: {
@@ -40,18 +39,16 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs, { explorer: 
 app.use(express.json());
 app.use(helmet());
 app.use(cors());
-app.use("/", router);
+app.use("/", middlewareRouter);
 
 async function runServer() {
     if (!server) {
         try {
             await databaseService.connect();
 
-            middlewareRouting(router);
-
-            logInController(app);
-            reservationController(app);
-            refreshTokenController(app);
+            logInController(app, middlewareRouter);
+            reservationController(app, middlewareRouter);
+            refreshTokenController(app, middlewareRouter);
 
             server = app.listen(port, () => {
                 LOG.info(__filename, `App listening on port ${port}`);
