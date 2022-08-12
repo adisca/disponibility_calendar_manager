@@ -212,6 +212,52 @@
  *                              type: string
  *                              description: Error message
  *                              example: Error Incorrect Authorization Header. Required Bearer token.
+ *      delete:
+ *          summary: Tries to delete a reservation
+ *          tags: [Reservation]
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          example:
+ *                              [{
+ *                                  "date": "2000-12-10",
+ *                                  "hour": [0, 1, 11, 12, 13, 22, 23]
+ *                              }]
+ *          responses:
+ *              200:
+ *                  description: Reservation(s) deleted successfully
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: string
+ *                              description: Success message
+ *                              example: Successfully deleted reservations from 2 days Days unchanged 2 Days not found 1 Days removed 0
+ *              400:
+ *                  description: Failed to remove reservations. One of the validations was unfulfilled.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: string
+ *                              description: Error message
+ *                              example: Error No hours to remove
+ *              401:
+ *                  description: Unauthorized, bad token
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: string
+ *                              description: Error message
+ *                              example: Error Incorrect Authorization Header. Required Bearer token.
+ *              404:
+ *                  description: Could not find any reservation to remove
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: string
+ *                              description: Error message
+ *                              example: NotFoundError Some dates were found (1/3), but no hours in those days matched the removal ones
  */
 
 const reservationService = require("../service/reservationService.js");
@@ -219,12 +265,19 @@ const tokenValidationMiddleware = require("../middleware/tokenValidationMiddlewa
 
 module.exports = function (app, middlewareRouter) {
     app.post("/reservation", reservationService.addReservation);
-    app.get("/reservation/interval", reservationService.getInterval);
     app.delete("/reservation", reservationService.deleteReservation);
+
+    app.get("/reservation/interval", reservationService.getInterval);
+
     app.post("/reservation/many", reservationService.addReservationMany);
+    app.delete("/reservation/many", reservationService.deleteReservationMany);
+
 
     middlewareRouter.post("/reservation", tokenValidationMiddleware.userRoleWrapper);
-    middlewareRouter.get("/reservation/interval", tokenValidationMiddleware.userRoleWrapper);
     middlewareRouter.delete("/reservation", tokenValidationMiddleware.userRoleWrapper);
+
+    middlewareRouter.get("/reservation/interval", tokenValidationMiddleware.userRoleWrapper);
+
     middlewareRouter.post("/reservation/many", tokenValidationMiddleware.userRoleWrapper);
+    middlewareRouter.delete("/reservation/many", tokenValidationMiddleware.userRoleWrapper);
 }
