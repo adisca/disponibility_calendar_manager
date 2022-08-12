@@ -9,7 +9,7 @@ chai.use(chaiHttp);
 describe("POST /refreshToken", () => {
     // All fields
     const user = {
-        email: "test1@test.com",
+        email: "test@test.com",
         password: "1234",
         name: "User For Testing",
         address: "None needed",
@@ -28,47 +28,39 @@ describe("POST /refreshToken", () => {
         return new Promise((resolve, reject) => {
             server.runServer();
             mongoose.connection.once("open", async () => {
-                const collections = await mongoose.connection.db.collections();
+                try {
+                    const collections = await mongoose.connection.db.collections();
 
-                for (let collection of collections) {
-                    await collection.deleteMany({});
+                    for (let collection of collections) {
+                        await collection.deleteMany({});
+                    }
+
+                    let res;
+
+                    res = await chai.request(server).post("/register").send(user);
+                    if (res.status != 201)
+                        throw new Error("Failed to initialize");
+
+                    res = await chai.request(server).post("/login").send(user);
+                    goodRefreshToken1.token = res.body.refreshToken;
+                    if (res.status != 200)
+                        throw new Error("Failed to initialize");
+
+                    res = await chai.request(server).post("/login").send(user);
+                    goodRefreshToken2.token = res.body.refreshToken;
+                    if (res.status != 200)
+                        throw new Error("Failed to initialize");
+
+                    res = await chai.request(server).post("/login").send(user);
+                    goodRefreshToken3.token = res.body.refreshToken;
+                    if (res.status != 200)
+                        throw new Error("Failed to initialize");
+
+                    resolve();
                 }
-
-                chai.request(server)
-                    .post("/register")
-                    .send(user)
-                    .end((err, _res) => {
-                        if (err)
-                            reject(err);
-                        chai.request(server)
-                            .post("/login")
-                            .send(user)
-                            .end((err, res) => {
-                                if (err)
-                                    reject(err);
-                                goodRefreshToken1.token = res.body.refreshToken;
-
-                                chai.request(server)
-                                    .post("/login")
-                                    .send(user)
-                                    .end((err, res) => {
-                                        if (err)
-                                            reject(err);
-                                        goodRefreshToken2.token = res.body.refreshToken;
-
-                                        chai.request(server)
-                                            .post("/login")
-                                            .send(user)
-                                            .end((err, res) => {
-                                                if (err)
-                                                    reject(err);
-
-                                                goodRefreshToken3.token = res.body.refreshToken;
-                                                resolve();
-                                            });
-                                    });
-                            });
-                    });
+                catch (err) {
+                    reject(err);
+                }
             });
         });
     });
@@ -96,70 +88,60 @@ describe("POST /refreshToken", () => {
             });
     });
 
-    it("It should work with the returned tokens", (done) => {
-        chai.request(server)
-            .post("/refreshToken")
-            .send(goodRefreshToken2)
-            .end((err, res) => {
-                expect(err).to.not.exist;
+    it("It should work with the returned tokens", () => {
+        return new Promise(async (resolve, reject) => {
+            let res;
+            let newToken = {};
+
+            try {
+                res = await chai.request(server).post("/refreshToken").send(goodRefreshToken2);
+
                 expect(res.body.authToken).to.exist;
                 expect(res.body.refreshToken).to.exist;
                 expect(res).to.have.status(200);
 
-                let newToken = {
-                    token: res.body.refreshToken
-                };
+                newToken.token = await res.body.refreshToken;
+                res = await chai.request(server).post("/refreshToken").send(newToken);
 
-                chai.request(server)
-                    .post("/refreshToken")
-                    .send(newToken)
-                    .end((err, res) => {
-                        expect(err).to.not.exist;
-                        expect(res.body.authToken).to.exist;
-                        expect(res.body.refreshToken).to.exist;
-                        expect(res).to.have.status(200);
+                expect(res.body.authToken).to.exist;
+                expect(res.body.refreshToken).to.exist;
+                expect(res).to.have.status(200);
 
-                        let newToken = {
-                            token: res.body.refreshToken
-                        };
+                newToken.token = res.body.refreshToken;
 
-                        chai.request(server)
-                            .post("/refreshToken")
-                            .send(newToken)
-                            .end((err, res) => {
-                                expect(err).to.not.exist;
+                res = await chai.request(server).post("/refreshToken").send(newToken);
 
-                                expect(res.body.authToken).to.exist;
-                                expect(res.body.refreshToken).to.exist;
-                                expect(res).to.have.status(200);
-                                done();
-                            });
-                    });
-            });
+                expect(res.body.authToken).to.exist;
+                expect(res.body.refreshToken).to.exist;
+                expect(res).to.have.status(200);
+                resolve();
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
     });
 
-    it("It should fail trying to use the same token twice", (done) => {
-        chai.request(server)
-            .post("/refreshToken")
-            .send(goodRefreshToken3)
-            .end((err, res) => {
-                expect(err).to.not.exist;
+    it("It should fail trying to use the same token twice", () => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let res;
+                res = await chai.request(server).post("/refreshToken").send(goodRefreshToken3);
                 expect(res.body.authToken).to.exist;
                 expect(res.body.refreshToken).to.exist;
                 expect(res).to.have.status(200);
 
-                chai.request(server)
-                    .post("/refreshToken")
-                    .send(goodRefreshToken3)
-                    .end((err, res) => {
-                        expect(err).to.not.exist;
-                        expect(res.body.authToken).to.not.exist;
-                        expect(res.body.refreshToken).to.not.exist;
-                        expect(res).to.have.status(404);
+                res = await chai.request(server).post("/refreshToken").send(goodRefreshToken3);
+                expect(res.body.authToken).to.not.exist;
+                expect(res.body.refreshToken).to.not.exist;
+                expect(res).to.have.status(404);
 
-                        done();
-                    });
-            });
+                resolve();
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
     });
 
     it("It should fail if it is missing required fields", (done) => {
