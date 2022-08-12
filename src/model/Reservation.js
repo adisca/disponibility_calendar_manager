@@ -29,18 +29,14 @@
 */
 
 const mongoose = require("mongoose");
-
-function dateValidator(v) {
-    const d = new Date(v);
-    return d instanceof Date && !isNaN(d) && v === d.toISOString().split("T")[0];
-}
+const validators = require("../utils/validators");
 
 const schema = new mongoose.Schema({
     date: {
         type: String,
         required: [true, "Date is required"],
         validate: {
-            validator: dateValidator,
+            validator: validators.dateValidator,
             message: props => `${props.value} is not a valid date!${"\n "}Note: only the format "YYYY-MM-DD" is accepted`
         }
     },
@@ -80,7 +76,7 @@ schema.pre("updateOne", function (next) {
             }
         });
         // Validate the date
-        if (!dateValidator(filter["date"]))
+        if (!validators.dateValidator(filter["date"]))
             return next(new Error(`${filter["date"]} is not a valid date!${"\n "}Note: only the format "YYYY-MM-DD" is accepted`));
     }
     return next();

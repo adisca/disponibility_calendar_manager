@@ -1,5 +1,14 @@
 /**
  * @swagger
+ * components:
+ *      securitySchemes:
+ *          BearerAuth:
+ *              type: http
+ *              scheme: bearer
+ */
+
+/**
+ * @swagger
  * tags:
  *      name: Log In
  *      description: Sign up/in API
@@ -24,7 +33,7 @@
  *                              address: "Romania, Cluj, Cluj-Napoca, Str. Dorobantilor"
  *                              phoneNb: "1234 123 123"
  *          responses:
- *              200:
+ *              201:
  *                  description: User created successfully
  *                  content:
  *                      application/json:
@@ -86,7 +95,7 @@
 
 const logInService = require("../service/logInService");
 
-module.exports = function (app) {
+module.exports = function (app, _middlewareRouter) {
     app.post("/register", logInService.registerUser);
 
     app.post("/login", logInService.login);

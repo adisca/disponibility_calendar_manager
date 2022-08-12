@@ -33,7 +33,7 @@ module.exports.registerUser = function (req, res) {
 
     repo.createUser(user)
         .then((msg) => {
-            res.status(200).send(msg);
+            res.status(201).send(msg);
         })
         .catch((err) => {
             LOG.error(__filename, err, "Failed to create User");

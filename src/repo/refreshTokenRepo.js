@@ -5,18 +5,16 @@ const NotFoundError = require("../utils/errors").NotFoundError;
 module.exports.searchAndDestroy = function (token) {
     return new Promise((resolve, reject) => {
 
-        function callbackCatch(err) {
-            LOG.error(__filename, err);
-            reject(err);
-        }
-
         RefreshToken.findOneAndDelete({ token: token }, (err, doc) => {
             if (err) {
-                callbackCatch(err);
+                LOG.error(__filename, err);
+                reject(err);
                 return;
             }
             if (!doc) {
-                callbackCatch(new NotFoundError("Refresh token not found"));
+                const err = new NotFoundError("Refresh token not found");
+                LOG.error(__filename, err);
+                reject(err);
                 return;
             }
 
@@ -24,7 +22,8 @@ module.exports.searchAndDestroy = function (token) {
 
             Account.findById(doc.accountId, (err, hit) => {
                 if (err) {
-                    callbackCatch(err);
+                    LOG.error(__filename, err);
+                    reject(err);
                     return;
                 }
 

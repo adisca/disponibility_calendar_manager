@@ -91,7 +91,7 @@ describe("POST /register", () => {
             .end((err, res) => {
                 expect(err).to.not.exist;
 
-                expect(res).to.have.status(200);
+                expect(res).to.have.status(201);
                 done();
             });
     });
@@ -104,7 +104,7 @@ describe("POST /register", () => {
             .end((err, res) => {
                 expect(err).to.not.exist;
 
-                expect(res).to.have.status(200);
+                expect(res).to.have.status(201);
                 done();
             });
     });
