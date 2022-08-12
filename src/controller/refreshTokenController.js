@@ -56,6 +56,6 @@
 
 const refreshTokenService = require("../service/refreshTokenService");
 
-module.exports = function (app) {
+module.exports = function (app, _middlewareRouter) {
     app.post("/refreshToken", refreshTokenService.refresh);
 }

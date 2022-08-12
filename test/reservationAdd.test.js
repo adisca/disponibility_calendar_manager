@@ -9,16 +9,16 @@ chai.use(chaiHttp);
 describe("POST /reservation", () => {
     // The test user
     const user1 = {
-        email: "test@test.com",
+        email: "test1@test.com",
         password: "1234",
-        name: "User For Testing",
+        name: "User For Testing1",
         address: "None needed",
         phoneNb: "1234 123 123"
     };
     const user2 = {
-        email: "test@test.com",
+        email: "test2@test.com",
         password: "1234",
-        name: "User For Testing",
+        name: "User For Testing2",
         address: "None needed",
         phoneNb: "1234 123 123"
     };
@@ -52,43 +52,39 @@ describe("POST /reservation", () => {
         return new Promise((resolve, reject) => {
             server.runServer();
             mongoose.connection.once("open", async () => {
-                const collections = await mongoose.connection.db.collections();
+                try {
+                    const collections = await mongoose.connection.db.collections();
 
-                for (let collection of collections) {
-                    await collection.deleteMany({});
+                    for (let collection of collections) {
+                        await collection.deleteMany({});
+                    }
+
+                    let res;
+
+                    res = await chai.request(server).post("/register").send(user1);
+                    if (res.status != 201)
+                        throw new Error("Failed to initialize");
+
+                    res = await chai.request(server).post("/login").send(user1);
+                    goodToken1 = res.body.authToken;
+                    if (res.status != 200)
+                        throw new Error("Failed to initialize");
+
+
+                    res = await chai.request(server).post("/register").send(user2);
+                    if (res.status != 201)
+                        throw new Error("Failed to initialize");
+
+                    res = await chai.request(server).post("/login").send(user2);
+                    goodToken2 = res.body.authToken;
+                    if (res.status != 200)
+                        throw new Error("Failed to initialize");
+
+                    resolve();
                 }
-
-                chai.request(server)
-                    .post("/register")
-                    .send(user1)
-                    .end((err, _res) => {
-                        if (err)
-                            reject(err);
-                        chai.request(server)
-                            .post("/login")
-                            .send(user1)
-                            .end((err, res) => {
-                                if (err)
-                                    reject(err);
-                                goodToken1 = res.body.authToken;
-                                chai.request(server)
-                                    .post("/register")
-                                    .send(user2)
-                                    .end((err, _res) => {
-                                        if (err)
-                                            reject(err);
-                                        chai.request(server)
-                                            .post("/login")
-                                            .send(user2)
-                                            .end((err, res) => {
-                                                if (err)
-                                                    reject(err);
-                                                goodToken2 = res.body.authToken;
-                                                resolve();
-                                            });
-                                    });
-                            });
-                    });
+                catch (err) {
+                    reject(err);
+                }
             });
         });
     });
@@ -114,7 +110,7 @@ describe("POST /reservation", () => {
             });
     });
 
-    it("It should work when everythin is fine", (done) => {
+    it("It should work when everything is fine", (done) => {
         chai.request(server)
             .post("/reservation/add")
             .send(goodReservation1)
@@ -122,7 +118,7 @@ describe("POST /reservation", () => {
             .end((err, res) => {
                 expect(err).to.not.exist;
 
-                expect(res).to.have.status(200);
+                expect(res).to.have.status(201);
                 done();
             });
     });
@@ -135,7 +131,7 @@ describe("POST /reservation", () => {
             .end((err, res) => {
                 expect(err).to.not.exist;
 
-                expect(res).to.have.status(200);
+                expect(res).to.have.status(201);
                 done();
             });
     });
@@ -148,7 +144,7 @@ describe("POST /reservation", () => {
             .end((err, res) => {
                 expect(err).to.not.exist;
 
-                expect(res).to.have.status(200);
+                expect(res).to.have.status(201);
                 done();
             });
     });
@@ -161,7 +157,7 @@ describe("POST /reservation", () => {
             .end((err, res) => {
                 expect(err).to.not.exist;
 
-                expect(res).to.have.status(200);
+                expect(res).to.have.status(201);
                 done();
             });
     });
@@ -174,7 +170,7 @@ describe("POST /reservation", () => {
             .end((err, res) => {
                 expect(err).to.not.exist;
 
-                expect(res).to.have.status(200);
+                expect(res).to.have.status(201);
                 done();
             });
     });
