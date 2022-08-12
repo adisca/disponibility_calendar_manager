@@ -214,6 +214,8 @@ module.exports.deleteReservationMany = function (reservations) {
             let bulkOps = [];
             let dates = [];
             for (let reservation of reservations) {
+                // Validates date and hours
+                await Reservation.validate(reservation);
                 // Should validate reservation
                 if (reservation.hour.length <= 0) {
                     throw new Error("No hours to remove");
@@ -222,21 +224,9 @@ module.exports.deleteReservationMany = function (reservations) {
                 if (reservation.hour.length > 24) {
                     throw new Error("Too many hours, please avoid invalid hours and duplicates");
                 }
-                // Validate the hours here
-                for (let h of reservation.hour) {
-                    if (h < 0 || h > 23) {
-                        throw new Error(`Invalid hour. ${h} is outside the possible interval`);
-                    }
-                }
 
-                // Validate date here with the validator from next update, otherwise it will become a mess
-
-                if (dates.indexOf(reservation.date) >= 0) {
-                    const err = new Error("Duplicate dates");
-                    LOG.error(__filename, err);
-                    errorService.error(res, err, "Failed to remove reservations");
-                    return;
-                }
+                if (dates.indexOf(reservation.date) >= 0)
+                    throw new Error("Duplicate dates");
 
                 dates.push(reservation.date);
                 bulkOps.push({
