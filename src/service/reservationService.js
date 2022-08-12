@@ -23,6 +23,32 @@ module.exports.addReservation = function (req, res) {
         });
 }
 
+module.exports.addReservationMany = function (req, res) {
+    let reservationJsons = req.body;
+
+    if (!Array.isArray(reservationJsons)) {
+        const err = new Error("Input is not an array");
+        LOG.error(__filename, err, "Failed to add reservations");
+        errorService.error(res, err, "Failed to add reservations");
+        return;
+    }
+
+    if (!validators.jsonManyFieldPresentWrapper(reservationJsons, ["date", "hour"], res, __filename))
+        return;
+
+    for (let json of reservationJsons)
+        json["accountId"] = req.payload.id;
+
+    repo.addReservationMany(reservationJsons)
+        .then((msg) => {
+            res.status(200).send(msg);
+        })
+        .catch((err) => {
+            LOG.error(__filename, err, "Failed to add reservations");
+            errorService.error(res, err, "Failed to add reservations");
+        });
+}
+
 module.exports.getInterval = function (req, res) {
     let intervalJson = req.query;
 

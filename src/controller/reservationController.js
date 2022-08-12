@@ -168,6 +168,50 @@
  *                              type: string
  *                              description: Error message
  *                              example: NotFoundError No reservations match the interval
+ * 
+ */
+
+/**
+ * @swagger
+ * /reservation/many:
+ *      post:
+ *          summary: Tries to add an array of reservations
+ *          tags: [Reservation]
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          example:
+ *                              [{
+ *                                  "date": "2000-12-10",
+ *                                  "hour": [0, 1, 11, 12, 13, 22, 23]
+ *                              }]
+ *          responses:
+ *              200:
+ *                  description: Reservations added successfully
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: string
+ *                              description: Success message
+ *                              example: Successfully added reservation(s)
+ *              400:
+ *                  description: Failed to add reservation. One of the validations was unfulfilled.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: string
+ *                              description: Error message
+ *                              example: ValidationError hour 24 is not a valid hour! Failed to add reservation
+ *              401:
+ *                  description: Unauthorized, bad token
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: string
+ *                              description: Error message
+ *                              example: Error Incorrect Authorization Header. Required Bearer token.
  */
 
 const reservationService = require("../service/reservationService.js");
@@ -177,8 +221,10 @@ module.exports = function (app, middlewareRouter) {
     app.post("/reservation", reservationService.addReservation);
     app.get("/reservation/interval", reservationService.getInterval);
     app.delete("/reservation", reservationService.deleteReservation);
+    app.post("/reservation/many", reservationService.addReservationMany);
 
     middlewareRouter.post("/reservation", tokenValidationMiddleware.userRoleWrapper);
     middlewareRouter.get("/reservation/interval", tokenValidationMiddleware.userRoleWrapper);
     middlewareRouter.delete("/reservation", tokenValidationMiddleware.userRoleWrapper);
+    middlewareRouter.post("/reservation/many", tokenValidationMiddleware.userRoleWrapper);
 }
